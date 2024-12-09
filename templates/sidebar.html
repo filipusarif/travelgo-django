@@ -1,0 +1,52 @@
+{% load static %}
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+    <ul class="nav">
+        <li class="nav-item nav-profile">
+            <a class="nav-link">
+                <div class="nav-profile-image">
+                    
+                    <img src="https://static.vecteezy.com/system/resources/previews/001/840/612/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg"
+                    alt="profile">
+                    
+                    <span class="login-status online"></span>
+                    
+                    <!--change to offline or busy as needed-->
+                </div>
+                <div class="nav-profile-text d-flex flex-column">
+                    
+                    <span class="font-weight-bold mb-2">{{ user.username }}</span>
+                </div>
+                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+            </a>
+        </li>
+
+        {% if not is_customer %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'bus:bus_list' %}">
+                <span class="menu-title">Bus</span>
+                <i class="mdi mdi-bus menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'services:service_list' %}">
+                <span class="menu-title">Services</span>
+                <i class="mdi mdi-google-circles-extended menu-icon"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:reports' %}">
+                <span class="menu-title">Reports</span>
+                <i class="mdi mdi-book-minus menu-icon"></i>
+            </a>
+        </li>
+        {% if is_admin %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:user_list' %}">
+                <span class="menu-title">Users</span>
+                <i class="mdi mdi-account menu-icon"></i>
+            </a>
+        </li>
+        {% endif %}
+        {% endif %}
+    </ul>
+</nav>

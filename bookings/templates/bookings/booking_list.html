@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}My Bookings{% endblock %}
+{% load humanize %}
+
+{% block content %}
+{% include 'navbar_customer.html' %}
+
+<div class="container my-5 mt-5 pt-5">
+    <!-- Breadcrumb -->
+    <nav class="mb-4">
+        <a href="{% url 'users:homepage' %}" class="text-decoration-none text-secondary">Home</a> /
+        <span class="text-dark">My Bookings</span>
+    </nav>
+
+    <h1 class="mb-3">My Bookings</h1>
+    
+    <!-- Card-based Design with Image on Top -->
+    <div class="row">
+        {% for booking in bookings %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <!-- Image Section -->
+                <img src="{{ booking.bus.image }}" class="card-img-top" alt="{{ booking.bus.name }}" style="max-height: 200px; object-fit: cover;">
+                
+                <!-- Card Content -->
+                <div class="card-body">
+                    <h5 class="card-title">{{ booking.bus.name }}</h5>
+                    <p class="mb-1"><strong>Seats:</strong> {{ booking.seats }}</p>
+                    <p class="mb-1"><strong>Price:</strong> Rp. {{ booking.price_total|intcomma }}</p>
+                    <p class="mb-1"><strong>Date:</strong> {{ booking.booking_date }}</p>
+                    
+                    <p class="mb-1"><strong>Services:</strong></p>
+                    {% if booking.services.exists %}
+                        <ul class="mb-2">
+                            {% for service in booking.services.all %}
+                                <li>{{ service.name }} (Rp. {{ service.price|intcomma }})</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No services</p>
+                    {% endif %}
+
+                    {% if booking.reviews.exists %}
+                        <p class="text-success mb-2">Reviewed</p>
+                    {% else %}
+                        <a href="{% url 'reviews:review_add' booking.pk %}" class="btn btn-sm btn-primary mb-2">Give Review</a>
+                    {% endif %}
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'bookings:update_booking' booking.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                        <form method="POST" action="{% url 'bookings:delete_booking' booking.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 d-flex justify-content-center align-items-center" style="height: 70vh;">
+            <p class="text-center text-muted">You don't have any bookings yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
